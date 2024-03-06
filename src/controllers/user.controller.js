@@ -8,9 +8,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 const registerUser = asyncHandler( async( req,res)=>{
    const {username, password, email,fullName} = req.body
    console.log("email", email);
-   console.log("username", username);
-   console.log("password", password);
-   console.log("fullname", fullName);
+
 
    if (fullName === "") {
         throw ApiError(400, "fullname is required")
@@ -26,7 +24,7 @@ const registerUser = asyncHandler( async( req,res)=>{
         throw ApiError(400, "email is required")
    }
 
-   const existUser = User.findOne({
+   const existUser = await User.findOne({
     $or: [{username},{email}]
    })
    if (existUser) {
@@ -52,7 +50,7 @@ const registerUser = asyncHandler( async( req,res)=>{
     coverimage: coverimage?.url || "",
     email,
     password,
-    username: username.toLowercase()
+    username,
    })
 
   const createdUser = await User.findById(user._id).select(
